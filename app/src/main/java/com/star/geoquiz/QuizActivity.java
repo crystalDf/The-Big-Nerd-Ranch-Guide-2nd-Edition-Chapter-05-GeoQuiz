@@ -23,8 +23,6 @@ public class QuizActivity extends AppCompatActivity {
 
     private Button mCheatButton;
 
-    private boolean mIsCheater;
-
     private Question[] mQuestionBank = new Question[] {
             new Question(R.string.question_oceans, true),
             new Question(R.string.question_mideast, false),
@@ -35,7 +33,10 @@ public class QuizActivity extends AppCompatActivity {
 
     private int mCurrentIndex = 0;
 
+    private boolean[] mIsCheaters = new boolean[mQuestionBank.length];
+
     private static final String KEY_INDEX = "index";
+    private static final String IS_CHEATER = "is_cheater";
 
     private static final int REQUEST_CODE_CHEAT = 0;
 
@@ -46,6 +47,7 @@ public class QuizActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+            mIsCheaters = (boolean[]) savedInstanceState.getSerializable(IS_CHEATER);
         }
 
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
@@ -78,7 +80,6 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
-                mIsCheater = false;
                 updateQuestion();
             }
         });
@@ -88,7 +89,6 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mCurrentIndex = (mCurrentIndex + mQuestionBank.length - 1) % mQuestionBank.length;
-                mIsCheater = false;
                 updateQuestion();
             }
         });
@@ -110,13 +110,14 @@ public class QuizActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_INDEX, mCurrentIndex);
+        outState.putSerializable(IS_CHEATER, mIsCheaters);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_CHEAT && resultCode == RESULT_OK) {
             if (data != null) {
-                mIsCheater = CheatActivity.wasAnswerShown(data);
+                mIsCheaters[mCurrentIndex] = CheatActivity.wasAnswerShown(data);
             }
         }
     }
@@ -131,7 +132,7 @@ public class QuizActivity extends AppCompatActivity {
 
         int messageResId = 0;
 
-        if (mIsCheater) {
+        if (mIsCheaters[mCurrentIndex]) {
             messageResId = R.string.judgment_toast;
         } else if (userPressedTrue == answerIsTrue) {
             messageResId = R.string.correct_toast;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,8 @@ public class CheatActivity extends AppCompatActivity {
 
     private static final String EXTRA_ANSWER_SHOWN =
             "com.star.geoquiz.answer_shown";
+
+    private static final String ANSWER_TEXT = "answer_text";
 
     private boolean mAnswerIsTrue;
 
@@ -57,6 +60,24 @@ public class CheatActivity extends AppCompatActivity {
                 setResult(RESULT_OK, intent);
             }
         });
+
+        if (savedInstanceState != null) {
+            String answerText = savedInstanceState.getString(ANSWER_TEXT);
+
+            if (!TextUtils.isEmpty(answerText)) {
+                mAnswerTextView.setText(answerText);
+
+                Intent intent = new Intent();
+                intent.putExtra(EXTRA_ANSWER_SHOWN, true);
+                setResult(RESULT_OK, intent);
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(ANSWER_TEXT, mAnswerTextView.getText().toString());
     }
 
     @Override
