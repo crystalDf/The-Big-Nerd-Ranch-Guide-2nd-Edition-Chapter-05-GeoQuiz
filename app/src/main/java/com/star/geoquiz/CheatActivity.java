@@ -2,6 +2,7 @@ package com.star.geoquiz;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -25,6 +26,8 @@ public class CheatActivity extends AppCompatActivity {
 
     private TextView mAnswerTextView;
     private Button mShowAnswerButton;
+
+    private TextView mApiLevelTextView;
 
     public static Intent newIntent(Context packageContext, boolean answerIsTrue) {
         Intent intent = new Intent(packageContext, CheatActivity.class);
@@ -60,6 +63,9 @@ public class CheatActivity extends AppCompatActivity {
                 setResult(RESULT_OK, intent);
             }
         });
+
+        mApiLevelTextView = (TextView) findViewById(R.id.api_level);
+        mApiLevelTextView.setText("API level " + Build.VERSION.SDK_INT);
 
         if (savedInstanceState != null) {
             String answerText = savedInstanceState.getString(ANSWER_TEXT);
