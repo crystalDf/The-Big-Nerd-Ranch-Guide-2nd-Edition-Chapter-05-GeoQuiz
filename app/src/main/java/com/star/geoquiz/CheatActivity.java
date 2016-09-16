@@ -61,9 +61,7 @@ public class CheatActivity extends AppCompatActivity {
                     mAnswerTextView.setText(R.string.false_button);
                 }
 
-                Intent intent = new Intent();
-                intent.putExtra(EXTRA_ANSWER_SHOWN, true);
-                setResult(RESULT_OK, intent);
+                setAnswerShowResult(true);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     int cx = mShowAnswerButton.getWidth() / 2;
@@ -95,11 +93,15 @@ public class CheatActivity extends AppCompatActivity {
             if (!TextUtils.isEmpty(answerText)) {
                 mAnswerTextView.setText(answerText);
 
-                Intent intent = new Intent();
-                intent.putExtra(EXTRA_ANSWER_SHOWN, true);
-                setResult(RESULT_OK, intent);
+                setAnswerShowResult(true);
             }
         }
+    }
+
+    private void setAnswerShowResult(boolean isAnswerShown) {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown);
+        setResult(RESULT_OK, intent);
     }
 
     @Override
