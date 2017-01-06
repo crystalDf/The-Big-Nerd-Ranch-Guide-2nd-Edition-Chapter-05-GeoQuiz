@@ -26,4 +26,5 @@ public class Question {
     public void setAnswerTrue(boolean answerTrue) {
         mAnswerTrue = answerTrue;
     }
+
 }
